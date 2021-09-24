@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}search-bar{% endblock %}
+{% block navbar_title %}Search-bar{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+{% endblock %}
+{% block content %}
+<h4 class="h4 small">Search:</h4>
+<form method="GET" action="{{url_for('search')}}">
+    <input type="text" name="searchstring" id="searchstring" data-role="input"
+    data-prepend="<span class='mif-search'></span>"/>
+    <button type="submit" class="button success">Submit</button>
+</form>
+<h2 class="h2">Trending Lectures</h2>
+<div id="trending">
+    <ol>
+        {% for i in usermodel %}
+        <li>
+        	<div id="thumbnail_video">
+        		<img src="{{url_for('filesrc',video_id=i.video_id,type='thumbnail',filename=i.thumbnail_file)}}" alt="video_thumbnail" name="video_thumbnail" width="277em" height="156em">
+        	</div>
+        <h6><a href="{{ url_for('uploaded_file',video_id=i.video_id) }}">{{ i.title }}</a></h6>
+        <p><strong>Uploader:</strong>{{ i.username }} ,<strong>Views:</strong>{{ i.view_no }}</p>
+        
+        </li>
+        
+        {% endfor %}
+    </ol>
+</div>
+{% endblock %}
+{%block scripts%}
+<style>
+p {
+width: 20em;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+</style>
+{%endblock%}
+<!--
+    url for geting trending page={{ url_for('trending_page',page=2) }}
+    just increment page number until you finish contents
+    call this to get usermodel object
+    copy the content from 14-19 line between <ol> to display content
+-->

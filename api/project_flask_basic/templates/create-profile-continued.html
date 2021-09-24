@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <title>Create Account</title>
+        <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body>
+        <div id="createpro" style="padding-left: 12%;
+    padding-right: 12%;
+    padding-top: 4%;
+    padding-bottom: 4%;">
+            <h2 style="text-align: center"><strong>continue your profile</strong></h2>
+            <br><br>
+            <form method="POST" enctype="multipart/form-data" action="{{url_for('createcontinue')}}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                {% if error %}
+                <font style="color: red;">{{error}}</font>
+                {% endif %}
+                <br>
+                <label>First Name</label>
+                <input type="text" placeholder="Enter First Name" id="firstname" name="firstname" class="names" required="required"/>
+                <br>
+                <label>Second Name</label>
+                <input type="text" placeholder="Enter Second Name" id="secondname" name="secondname" class="names" />
+                <br>
+                <label>Description</label>
+                <small>Things about you and your work</small>
+                <input type="text" placeholder="Enter Description" id="description" name="description" class="names" />
+                <br>
+                <label>Email</label>
+                <small>This is used for password recovery,updates etc</small>
+                <input type="email" placeholder="Email" id="email" name="email" class="names" />
+                <br>
+                <label>Institution</label>
+                <input type="text" placeholder="Enter institutuion" id="institution" name="institution" class="names"/>
+                <br>
+                <input type="radio" id="teacher_yes" name="teacher" value='True' />
+                <label for="teacher_yes">Are you a teacher</label><br>
+                <input type="radio" id="teacher_no" name="teacher" value='False'/>
+                <label for="teacher_no">No</label>
+                <br>
+                <label>your Avatar</label>
+                <input type="file" data-role="file" data-button-title="Choose img" accept="image/*"id="avatarid" name="avatarid">
+                <br>
+                <div class="form-group">
+                    <button class="button success">Submit data</button>
+                    <input type="reset" class="button" value="Reset">
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

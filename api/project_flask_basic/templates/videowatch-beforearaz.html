@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+{% block title %}Video-watch{% endblock %}
+{% block navbar_title %}Video Watch{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+<link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+{% endblock %}
+{% block content %}
+<div id="video-content">
+	<div id="main-video">
+	    <video id="main_video" playsinline controls width="60%" preload="auto" crossorigin="anonymous"
+	        data-poster="{{url_for('filesrc',type='thumbnail',filename= usermodel.thumbnail_file,video_id=video_id ) }}">
+	        {% if not if_qualities %}
+	        <source src="{{url_for('filesrc',type='video',filename= usermodel.video_file,video_id=video_id ) }}" crossorigin="anonymous">
+	        {%endif%}
+	        {% if if_qualities %}
+	        {%for i in usermodel.videoqualities.rstrip().split(',') %}
+	        <source
+	            src="{{url_for('filesrc',type='videoqualities',filename= usermodel.video_file, video_id=video_id, filepath=i ) }}"
+	            size="{{ i.split('p')[0] }}" type="video/mp4" crossorigin="anonymous">
+	        {%endfor%}
+	        <audio id="main_audio" crossorigin="anonymous">
+	          <source src="{{url_for('filesrc',type='audio',filename= video_id+'.'+'mp4',video_id=video_id ) }}" type="audio/mp4" crossorigin="anonymous">
+	        </audio>
+	        {%endif%}
+	    </video>
+	</div>
+	<div id="video-title">
+	    <h3 class="h2">{{ usermodel.title }}</h3>
+	</div>
+	<div id="info" class="grid">
+	    <div class="row">
+	        <div class="cell-3"><div>{{ usermodel.published }}</div></div>
+	        <div class="cell-3 offset-3" style="text-align: center;"><div name="views">Views:{{ usermodel.view_no }}</div></div><div class="cell-3" name="likes">Likes:{{ usermodel.likes }}</div>
+	    </div>
+	</div>
+	<div id="author">
+		<hr>
+		<div class="row">
+			<div class="cell-1"><img src="{{ url_for('uploaded_icons',filename=get_user_photo(usermodel.username)) }}" id="author_thumbnail"/></div>
+			<div class="cell-3"><h5 class="h5" style="padding-left: 2em;"><a href="{{ url_for('username_out',username=usermodel.username) }}">{{ usermodel.username }}</a></h5></div>
+		</div>
+		<hr>
+	</div>
+	<div id="video-description">
+	    <p><span class="mif-info"></span>Description:{{ usermodel.description }}</p>
+	</div>
+</div>
+
+<div id="content">
+    <title>Snapshots</title>
+    <button id="cit" onclick="shoot()" hidden class="button">Capture</button>
+	<div id="output"></div>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    
+  
+  <style>
+  
+  body {
+    user-select: none;
+  }
+  
+  [type=radio] {
+    display: none;
+  }
+  
+  #slider {
+    height: 35vw;
+    position: relative;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+  
+  #slider label {
+    margin: auto;
+    width: 60%;
+    height: 100%;
+    border-radius: 4px;
+    position: absolute;
+    left: 0; right: 0;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+  }
+  
+  #s1:checked ~ #slide4, #s2:checked ~ #slide5,
+  #s3:checked ~ #slide1, #s4:checked ~ #slide2,
+  #s5:checked ~ #slide3 {
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,.37);
+    transform: translate3d(-30%,0,-200px);
+  }
+  
+  #s1:checked ~ #slide5, #s2:checked ~ #slide1,
+  #s3:checked ~ #slide2, #s4:checked ~ #slide3,
+  #s5:checked ~ #slide4 {
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,.3), 0 2px 2px 0 rgba(0,0,0,.2);
+    transform: translate3d(-15%,0,-100px);
+  }
+  
+  #s1:checked ~ #slide1, #s2:checked ~ #slide2,
+  #s3:checked ~ #slide3, #s4:checked ~ #slide4,
+  #s5:checked ~ #slide5 {
+    box-shadow: 0 13px 25px 0 rgba(0,0,0,.3), 0 11px 7px 0 rgba(0,0,0,.19);
+    transform: translate3d(0,0,0);
+  }
+  
+  #s1:checked ~ #slide2, #s2:checked ~ #slide3,
+  #s3:checked ~ #slide4, #s4:checked ~ #slide5,
+  #s5:checked ~ #slide1 {
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,.3), 0 2px 2px 0 rgba(0,0,0,.2);
+    transform: translate3d(15%,0,-100px);
+  }
+  
+  #s1:checked ~ #slide3, #s2:checked ~ #slide4,
+  #s3:checked ~ #slide5, #s4:checked ~ #slide1,
+  #s5:checked ~ #slide2 {
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,.37);
+    transform: translate3d(30%,0,-200px);
+  }
+
+  #slide1 span:first-of-type{
+    top: 97%;
+    position: relative;
+    bottom: 0px;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide2 span:first-of-type{
+    top: 97%;
+    position: relative;
+    bottom: 0px;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide3 span:first-of-type{
+    top: 97%;
+    position: relative;
+    bottom: 0px;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide4 span:first-of-type{
+    top: 97%;
+    position: relative;
+    bottom: 0px;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide5 span:first-of-type{
+    top: 97%;
+    position: relative;
+    bottom: 0px;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide1 span:last-of-type{
+    top: 97%;
+    position: relative;
+    left: 92%;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide2 span:last-of-type{
+    top: 97%;
+    position: relative;
+    left: 92%;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide3 span:last-of-type{
+    top: 97%;
+    position: relative;
+    left: 92%;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide4 span:last-of-type{
+    top: 97%;
+    position: relative;
+    left: 92%;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  #slide5 span:last-of-type{
+    top: 97%;
+    position: relative;
+    left: 92%;
+    background-color: #63605e;
+    border-radius: 50%;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #f8f8f8;
+  }
+
+  div#video-content
+  {
+  	padding-left: 5em;
+    padding-right: 5em;
+  }
+  
+  img#author_thumbnail
+  {
+  	 width:5em;
+  	 height:5em;
+  }
+
+  @media (max-width: 978px) {
+  	div#video-content
+    {
+  	 padding-left: 0.5em;
+     padding-right: 0.5em;
+    }
+    img#author_thumbnail
+    {
+   	  width:3em;
+  	  height:3em;
+     }
+  }
+    
+
+
+
+  </style>
+  
+  
+  
+  <h1 style="text-align: center;font-size: 42px;font-family: monospace;">Snapshots for Education</h1>
+  <div class="col-lg-4 col-md-6 mt--160" style="background-color:white;text-align: center; margin: 0 auto;">
+  <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"> GUIDELINES: <br> Slide 1 will fetch the recent snapshot from the video. <br> Slides 2,3,4 & 5 will contain the previous snapshots in this order</p>
+  </div>
+  <br>
+  
+  <section id="slider">
+    <input type="radio" name="slider" id="s1">
+    <input type="radio" name="slider" id="s2">
+    <input type="radio" name="slider" id="s3" checked>
+    <input type="radio" name="slider" id="s4">
+    <input type="radio" name="slider" id="s5">
+    <label for="s1" id="slide1">
+        <span>1</span>
+        <span>1</span>
+        <img id = "imgsld1" src="" height="100%" width="100%">
+        
+        
+        
+    </label>
+    <label for="s2" id="slide2">
+              <span>2</span>
+              <span>2</span>
+              <img id = "imgsld2" src="" height="100%" width="100%">
+    </label>
+    <label for="s3" id="slide3">
+               <span>3</span>
+               <span>3</span>
+              <img id = "imgsld3" src="" height="100%" width="100%">
+    </label>
+    <label for="s4" id="slide4">
+                <span>4</span>
+                <span>4</span>
+              <img id = "imgsld4" src="" height="100%" width="100%">
+    </label>
+    <label for="s5" id="slide5">
+              <span>5</span>
+              <span>5</span>
+              <img id = "imgsld5" src="" height="100%" width="100%">
+    </label>
+  </section>
+
+<hr>
+
+
+
+
+
+    
+</div>
+<div id="pdfs">
+    {% if usermodel.pres_file %}
+    <iframe data-src="{{ url_for('filesrc',type='pdf',filename= usermodel.pres_file,video_id=video_id ) }}" style="width: 300px; height: 200px;"></iframe>
+    {% endif %}
+</div>
+<div id="comment-if-logged">
+    {% if session['if_logged'] %}
+    <form action="#0" id="add-comments" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <label>Your comment</label>
+        <input name="your_comments" id="your_comments" type="text" data-role="input"
+    data-prepend="<span class='mif-comment'></span>">
+        <input type="hidden" id="video_id" name="video_id" value="{{ video_id }}">
+        <button type="submit" value="Submit" id="submit" class="button success">Submit</button>
+    </form>
+    <br>
+    {% endif %}
+</div>
+<div id="comments">
+    {% for i in usercomment %}
+    <div class="single-comment container" style="background-color: #efefef;">
+    	<div class="grid">
+	        <input type="hidden" value="{{ i.serial_c }}">
+	        <div class="row">
+	        <div class="cell-3"><a href="{{ url_for('username_out',username=i.username) }}"><strong>{{ i.username }}</strong></a></div><div class="cell-3 offset-5">{{ i.published }}</div>
+	        </div>
+	        <h6 class="single-comment-content h6">{{ i.contents }}</h6>
+        </div>
+    </div>
+    <hr>
+    {% endfor %}
+</div>
+
+
+{% endblock %}
+{%block scripts %}
+
+
+<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js" defer></script>
+<script src="https://cdn.plyr.io/3.6.2/plyr.js"></script>
+<script type="text/javascript" src="{{url_for('static',filename='js/snaps-producer.js')}}" defer></script>
+    <script>
+            var csrf_token = "{{ csrf_token() }}";
+            const player = new Plyr('video', {
+                title: 'Video-snapz',
+              });
+
+                            // Expose player so it can be used from the console
+            window.player = player;
+          
+            if(player.hasAudio==false)
+            {
+            	audioid=document.getElementById('main_audio');
+	            player.on('playing',event =>{
+				    audioid.currentTime=player.currentTime  //to correct ffmpeg encode error
+				    audioid.play()
+				});
+
+	            player.on('pause',event=>{
+					    audioid.pause()
+				});
+
+				player.on('volumechange',event =>{
+				    audioid.volume=player.volume
+				});
+
+				player.on('ratechange',event =>{
+				    audioid.playbackRate=player.speed
+				});
+			}
+
+            var commented = $('#your_comments').val();
+            console.log(commented)
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                        }
+                    }
+                });
+        $(function () {
+            
+            $('#add-comments').on('submit', function (e) {
+                var comment = $('#your_comments').val();
+                e.preventDefault();
+                
+                var video_id = $('#video_id').val();
+                
+                $.post("{{ url_for('send_comments') }}", { "comment": comment, "video_id": video_id }, abc);
+                function abc() {
+                    alert('comment was submitted');
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

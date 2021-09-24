@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}test-metro{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+<link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+{% endblock %}
+{% block content %}
+<div id="main-video">
+<video id="player" playsinline controls width="60%" preload="metadata" data-poster="{{url_for('filesrc',type='thumbnail',filename= usermodel.thumbnail_file,video_id=video_id ) }}">
+    {% if not if_qualities %}
+    <source src="{{url_for('filesrc',type='video',filename= usermodel.video_file,video_id=video_id ) }}">
+    {%endif%}
+    {% if if_qualities %}
+        {%for i in usermodel.videoqualities.split(',') %}
+          <source src="{{url_for('filesrc',type='videoqualities',filename= usermodel.video_file, video_id=video_id, filepath=i ) }}" size={{i}} type="video/mp4">
+        {%endfor%}
+        <source src="{{url_for('filesrc',type='audio',filename= video_id+'.'+'aac',video_id=video_id ) }}" type="audio" >
+    {%endif%}
+</video>
+</div>
+<div id="video-title">
+    <h3>{{ usermodel.title }}</h3>
+</div>
+<div id="info">
+    <h6 class="mdl-typography--display-2">{{ usermodel.published }}</h6>
+    <h6 class="mdl-typography--body-1">{{ usermodel.view_no }}</h6>
+    <h6 class="mdl-typography--body-1">{{ usermodel.likes }}</h6>
+</div>
+<div id="video-description">
+    <p>{{ usermodel.description }}</p>
+</div>
+<div id="pdfs">
+    {% if usermodel.pres_file %}
+    <iframe data-src="{{ url_for('filesrc',type='pdf',filename= usermodel.pres_file,video_id=video_id ) }}" style="width: 300px; height: 200px;"></iframe>
+    {% endif %}
+</div>
+<div id="comment-if-logged">
+    {% if session['if_logged'] %}
+    <form action="#0" id="add-comments" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input name="your_comments" id="your_comments" type="text">
+        <input type="hidden" id="video_id" name="video_id" value="{{ video_id }}">
+        <button type="submit" value="Submit" id="submit">Submit</button>
+    </form>
+    {% endif %}
+</div>
+<div id="comments">
+    {% for i in usercomment %}
+    <div class="single-comment" style="background-color: lightblue;">
+        <input type="hidden" value="{{ i.serial_c }}">
+        <p>{{ i.username }}     </p><p style="color: beige; width:56px;">{{ i.published }}</p>
+        <br>
+        <h6 class="single-comment-content">{{ i.contents }}</h6>
+    </div>
+    {% endfor %}
+</div>
+<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+<script src="https://cdn.plyr.io/3.6.2/plyr.js"></script>
+    <script>
+            const player = new Plyr('video');
+
+                // Expose player so it can be used from the console
+            window.player = player;
+            var csrf_token = "{{ csrf_token() }}";
+            var commented = $('#your_comments').val();
+            console.log(commented)
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                        }
+                    }
+                });
+        $(function () {
+            
+            $('#add-comments').on('submit', function (e) {
+                var comment = $('#your_comments').val();
+                e.preventDefault();
+                
+                var video_id = $('#video_id').val();
+                
+                $.post("{{ url_for('send_comments') }}", { "comment": comment, "video_id": video_id }, abc);
+                function abc() {
+                    alert('comment was submitted');
+                }
+            });
+
+        });
+    </script>
+    
+{% endblock %}

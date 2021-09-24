@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Upload Video{% endblock %}
+{% block navbar_title %}Upload Video{%endblock%}
+{% block head %}
+{{ super() }}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<!--<script src="{{ url_for('static', filename='uploader.js') }}"></script>-->
+<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+{% endblock %}
+{% block jumbotron_title %}Index-jumbtron{% endblock %}
+{% block jumbotron_text %}Index-jumbtron_textbj wef giweg v rev wudcuhweo wev {% endblock %}
+{% block content %}
+<div class="upload-videos" style="padding: 5%;">
+        <div class="video-picker form-group">
+            <form id="upload_form" enctype="multipart/form-data" method="post" action="{{url_for('uploading')}}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <br>
+            {% if error %}
+            <p>
+                <font color="red"><strong>Error:</strong> {{ error }}</font>
+            </p>
+            {% endif %}
+            <label>Upload videos:(*supported:mp4,mp3,webm,wmv,mpg,mpeg,avi)</label>
+            <input class="fileupload" type="file" name="file" id="file" data-url="{{url_for('uploading')}}" placeholder="upload video" required="required" accept="video/*">
+            <labe>Title:</labe>
+            <input type="text" id="title" name="title" required="required">
+            <label>Description</label>
+            <input type="text" id="description" name="description">
+            <label>Thumbnail</label>
+            <input class="fileupload" type="file" name="thumbnail" id="thumbnail" placeholder="upload thumbnail" accept="image/*" required="required">
+            <label>Upload pdf(if needed):</label>
+            <input type="file" name="pdf-file" placeholder="upload pdf" accept="*.pdf">
+            <progress id="progressBar" value="0" max="100" style="width:300px"></progress>
+            <h3 id="status"></h3>
+            <p id="loaded_n_total"></p>
+            <input class="button success primary" type="submit" value="submit">
+            <input class="button " type="reset" value="Reset">
+            </form>
+        </div>
+        <div id="upload-info">
+        	<p>Please note that after uploading the video,server may take some time before recieving it. You will be redirected to your original uploaded video as it is for now. It will take some time before processing and it will be reflected right after the processing has finished in your browser. 
+        	If you are the uploader,you will get message in your account when it is finished.</p>
+        </div>  
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+        var csrf_token = "{{ csrf_token() }}";
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+                
+            }
+        });
+    function _(el){
+        return document.getElementById(el);
+    }
+    function uploadFile() {
+        var file = _("file").files[0];
+        alert(file.name + " | " + file.size + " | " + file.type);
+        var formdata = new FormData();
+        formdata.append("file", file);
+        var ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", completeHandler, false);
+        ajax.addEventListener("error", errorHandler, false);
+        ajax.addEventListener("abort", abortHandler, false);
+        ajax.open("POST", "{{url_for('uploading')}}");
+        ajax.setRequestHeader("X-CSRFToken", csrf_token);
+        ajax.setRequestHeader("Content-Type", "multipart/form-data");
+        ajax.send(formdata);
+    }
+    function progressHandler(event) {
+        _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+        var percent = (event.loaded / event.total) * 100;
+        _("progressBar").value = Math.round(percent);
+        _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+    }
+    function completeHandler(event) {
+        _("status").innerHTML = event.target.responseText;
+        _("progressBar").value = 0;
+    }
+    function errorHandler(event) {
+        _("status").innerHTML = "Upload Failed";
+    }
+    function abortHandler(event) {
+        _("status").innerHTML = "Upload Aborted";
+    }
+
+</script>
+{% endblock %}

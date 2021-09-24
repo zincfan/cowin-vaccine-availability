@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+  web:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      args:
+        - SECRET_KEY=$SECRET_KEY
+        - DATABASE_URL=$DATABASE_URL
+        - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+        - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+        - AWS_BUCKET=$AWS_BUCKET
+        - AWS_REGION=$AWS_REGION
+        - CLOUDFRONT_DOMAIN=$CLOUDFRONT_DOMAIN
+    restart: always
+    ports:
+     - "5001:5001"
+    depends_on:
+      - redis
+    # volumes line used for hot code reloading
+    volumes: ['./api:/api']
+  worker:
+    build:
+      context: ./celery-queue
+      dockerfile: Dockerfile
+      args:
+        - SECRET_KEY=$SECRET_KEY
+        - DATABASE_URL=$DATABASE_URL
+        - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+        - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+        - AWS_BUCKET=$AWS_BUCKET
+        - AWS_REGION=$AWS_REGION
+        - CLOUDFRONT_DOMAIN=$CLOUDFRONT_DOMAIN
+    depends_on:
+      - redis
+      - web
+    volumes: ['./celery-queue:/celery']
+  redis:
+    image: redis

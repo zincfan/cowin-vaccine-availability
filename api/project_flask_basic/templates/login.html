@@ -1,0 +1,60 @@
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='create-profile.css')}}">   <!--same css as create-profile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+    <div class="container-fluid" id="if_logged">
+        {% if session[ 'username' ] %}
+        <h4>Logged in as {{ session['username'] }}.Do you want to log out?</h4>
+        <button type="button" class="button success outline" onload="loggedin()"><a href="logout">Logout</a></button>
+        {% endif %}
+        {% block body %}{% endblock %}
+    </div>
+    <div id="createpro">
+        <h2><strong>Login</strong></h2>
+        <br><br>
+        <form method="POST" action="{{url_for('login')}}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            {% if error %}
+            <p><font color="red"><strong>Error:</strong> {{ error }}</font></p>
+            {% endif %}
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" placeholder="Enter Username" id="userid" name="userid" required="required" />
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter password" id="passid" name="passid" required="required" />
+                <br>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" data-role="checkbox" data-caption="Remember me" value="1" name="remme" id="remme">Remember Me
+            </div>
+
+            <div class="form-group">
+                <button class="button success">Submit data</button>
+                <input type="reset" class="button" value="Reset">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
+
+<script>
+    function loggedin() {
+        var txt;
+        if (confirm("You are already logged in as {{ session['username'] }}. Do you want to log out!")) {
+            redirect( "{{ url_for('logout') }}");
+        } else {
+            redirect("{{ url_for('index') }}");
+        }
+    }
+</script>

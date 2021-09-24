@@ -1,0 +1,7 @@
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERYD_TASK_SOFT_TIME_LIMIT = 60*60*9
+CELERY_TRACK_STARTED = True
+CELERYD_PREFETCH_MULTIPLIER = 1
+CELERYD_MAX_TASKS_PER_CHILD=5
+CELERY_IMPORTS = ("os", "subprocess", "logging", "boto3", "errno","botocore")

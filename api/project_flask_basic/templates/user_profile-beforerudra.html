@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}user-profile{% endblock %}
+{% block navbar_title %}User-Profile{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<h2 style="align-content: center;">{{ username }}</h2>
+{% set user_detail=get_user_detail(username) %}
+<div id="description">
+    <br>
+    <h5 id="user_description">description:{{user_detail['description'] }}</h5>
+    <br>
+    <h5 id="institution">institution:{{user_detail['institution'] }}</h5>
+    <br>
+    <h5 id="teacher">Teacher:{{user_detail['teacher'] }}</h5>
+    <br>
+</div>
+<div id="videos">
+    {% set user_video_id=get_video_id(username) %}
+    <h4>Videos:</h4>
+    <br>
+      {% for i in user_video_id %}
+       <li>video_id:{{ i.video_id }},title:{{ i.title }}</li>
+       <br>
+      {% endfor %}
+</div>
+{% endblock %}

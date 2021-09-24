@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='create-profile.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+    <div id="createpro">
+        <strong>Edit Profile</strong>
+        <br><br>
+        <form method="POST" action="{{url_for('createcontinue')}}" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+                {% if error %}
+                <font style="color: red;">{{ error }}</font>
+                {% endif %}
+                <br>
+            </div>
+            <div class="form-group">
+                <label>First name</label>
+                <input type="text" id="firstname" name="firstname" value="{{ usermodel.first_name }}" required="required"/>
+                <label>Second name</label>
+                <input type="text" id="secondname" name="secondname" value="{{ usermodel.second_name }}"/>
+                <label>Description</label>
+                <small>Things about you and your work</small>
+                <input type="text" id="description" name="description" class="names" value="{{ usermodel.description }}"/>
+                <br>
+                <label>Email</label>
+                <small>This is used for password recovery,updates etc</small>
+                <input type="email" id="email" name="email" class="names" value="{{ usermodel.email }}"/>
+                <br>
+                <label>Institution</label>
+                <input type="text" id="institution" name="institution" class="names" value="{{ usermodel.institution }}"/>
+                <br>
+                <input type="radio" id="teacher_yes" name="teacher" value='True' />
+                <label for="teacher_yes">Are you a teacher</label><br>
+                <input type="radio" id="teacher_no" name="teacher" value='False' />
+                <label for="teacher_no">No</label>
+                <br>
+                <label>your Avatar</label>
+                <img src="{{ url_for('uploaded_icons', filename=usermodel.icon_photo_path) }}">
+                <input type="file" data-role="file" data-button-title="Choose img" accept="image/*" id="avatarid" name="avatarid" >
+                <br>
+                <div class="form-group">
+                    <button class="button success">Submit data</button>
+                    <input type="reset" class="button" value="Reset">
+                </div>
+            </div>
+            <br>
+        </form>
+    </div>
+</body>
+
+</html>

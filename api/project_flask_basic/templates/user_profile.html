@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}user-profile{% endblock %}
+{% block navbar_title %}User-Profile{% endblock %}
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+{% block content %}
+<div class="w3-container" style="text-align: center;"><h2 >{{ username }}</h2></div>
+{% set user_detail=get_user_detail(username) %}
+<div style="background-color: rgb(233, 231, 231);">
+<div id="description">
+    <br>
+    <h5 id="user_description">Description:{{user_detail['description'] }}</h5>
+    
+    <h5 id="institution">Institution:{{user_detail['institution'] }}</h5>
+    
+    <h5 id="teacher">Teacher:{{user_detail['teacher'] }}</h5>
+    <br>
+</div>
+</div>
+<div id="videos" >
+    
+    {% set user_video_id=get_video_id(username) %}
+    <div class="w3-container" style="text-align: center;"><h2 >Videos:</h2></div>
+    
+    <br>
+   
+      {% for i in user_video_id %}
+       <hr>
+       <li>video_id:{{ i.video_id }},title:{{ i.title }}</li>
+       <br>
+       <hr>
+      {% endfor %}
+</div>
+</body>
+{% endblock %}

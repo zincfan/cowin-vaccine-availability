@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}test-metro{% endblock %}
+{% block head %}
+{{ super() }}
+        <link href="https://vjs.zencdn.net/7.7.5/video-js.css" rel="stylesheet" />
+        <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+        <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+        <link href="https://unpkg.com/video.js@7/dist/video-js.min.css" rel="stylesheet" />
+        <link href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css" rel="stylesheet" />
+{% endblock %}
+{% block jumbotron_title %}Index-jumbtron{% endblock %}
+{% block jumbotron_text %}Index-jumbtron_textbj wef giweg v rev wudcuhweo wev {% endblock %}
+{% block content %}
+{{ super() }}
+<h1>Index</h1>
+<p class="important">
+    Welcome on my awesome homepage.
+    <video class="video-js vjs-theme-forest" id="main-video" controls width="540" height="320" autoPictureInPicture controls duration buffered poster="{{ url_for('static',filename='img/mr_handsome.jpg') }}" preload="metadata" crossorigin="use-credentials" data-setup="{}">
+        <source src="{{url_for('static',filename='video/BashLec.mp4')}}"
+            type="video/mp4">
+        
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+    </video>
+    <iframe src="https://rive.app/a/nastya/files/flare/under-construction/embed" frameborder="0" allow="autoplay" width="500" height="550"></iframe>
+{% endblock %}
+<script src="https://vjs.zencdn.net/7.7.5/video.js"></script>
+<style>
+    .controls button[data-state="subtitles"] {
+    height:85%;
+    text-indent:0;
+    font-size:16px;
+    font-size:1rem;
+    font-weight:bold;
+    color:#666;
+    background:#000;
+    border-radius:2px;
+}
+    @media screen and (max-width:400px){
+        video#main-media{
+            width: 390;
+            height: 220;
+        }
+        
+    }
+</style>

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}user-profile{% endblock %}
+{% block navbar_title %}User profile{%endblock%}
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+{% endblock %}
+{% block content %}
+<div class="w3-container" style="text-align: center;"><h2 >{{ username }}</h2></div>
+{% set user_detail=get_user_detail(username) %}
+<div style="background-color: rgb(233, 231, 231); background-size: 40% auto; width:100%;">
+<div id="description">
+    <h5 id="firstname">Firstname:{{ user_detail['firstname'] }}</h5>
+    
+    <h5 id="secondname">Secondname:{{ user_detail['secondname'] }}</h5>
+    
+    <h5 id="user_description">Description:{{user_detail['description'] }}</h5>
+    
+    <h5 id="institution">Institution:{{user_detail['institution'] }}</h5>
+    
+    <h5 id="teacher">Teacher:{{user_detail['teacher'] }}</h5>
+    <br>
+</div>
+</div>
+<div >
+<div name="edit-your-profile" style="background-color: rgb(233, 231, 231);">
+    <a href="{{ url_for('profile_edit') }}">Edit your profile</a>
+</div>
+<div style="text-align: center;"><strong>Messages:</strong></div>
+<div id="msg" name="messages">
+    {%for i in msg %}
+    <div id="indi-msg" name="individual-messages" style="background-color: rgb(229, 231, 231);">
+        <p name="message">{{i.msg}}
+        <strong>  | Date:{{ i.published }}</strong></p>
+    </div>
+    {%endfor%}
+</div>
+</div>
+<div style="margin-top: 30px;">
+<div id="videos">
+    {% set user_video_id=get_video_id(username) %}
+    <div style="text-align: center;"><strong>Videos:</strong></div>
+    <br>
+    {% for i in user_video_id %}
+    <div id="indi-vid">
+    	<div id="thumbnail_video">
+        		<img src="{{url_for('filesrc',video_id=i.video_id,type='thumbnail',filename=i.thumbnail_file)}}" alt="video_thumbnail" name="video_thumbnail" width="277em" height="156em">
+        </div>
+    <h5><strong>title:{{ i.title }}, video_id:{{ i.video_id }},</strong></h5>
+    <a href="{{ url_for('uploaded_file',video_id=i.video_id) }}">{{ i.title }}</a>
+    <p>description:{{ i.description }} |
+        published:{{ i.published }} |
+        likes: {{ i.likes }} |
+        views:{{ i.view_no }} |
+        {% if i.pres_file %}
+         Pdf:exists |
+        {% endif %}
+        {% if i.videoqualities %}
+          Qualities:{{i.videoqualities}} |
+        {% endif %}
+        <a href="{{ url_for('edit_videometa',video_id=i.video_id) }}">Edit</a>
+    </p>
+    </div>
+    <hr>
+    {% endfor %}
+</div>
+</div>
+<div id="info" padding="5px">
+	<strong><p>If you are looking if your video has processed or what has happened to your video,you will get message here,when the video processing has finished.
+	</p></strong>
+</div>
+</body>
+{% endblock %}

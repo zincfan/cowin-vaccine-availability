@@ -1,0 +1,1 @@
+celery -A flask_hello.celery worker --loglevel=info -Ofair

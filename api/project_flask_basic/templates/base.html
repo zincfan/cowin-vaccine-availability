@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" defer href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" defer href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <link rel="stylesheet" defer href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <title>{% block title %}{% endblock %}</title>
+        {% endblock %}
+    </head>
+    <body>
+        <!-- Always shows a header, even in smaller screens. -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            {% block navbar %}
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <!-- Title -->
+                    <span class="mdl-layout-title">{% block navbar_title %}Base{% endblock %}</span>
+                    <!-- Add spacer, to align navigation to the right -->
+                    <div class="mdl-layout-spacer"></div>
+                    <!-- Navigation. We hide it in small screens. -->
+                    <nav class="mdl-navigation mdl-layout--large-screen-only">
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('index')}}">Index</a>
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('createpro')}}">Signup</a>
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('search_bar')}}">Search-bar</a>
+                        {% if session['username'] or session['if_logged']%}
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('username_out',username=session['username'])}}">Profile</a>
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('logout')}}">Logout</a>
+                        <i class="fas fa-user-circle"></i>
+                        {% else %}
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('login')}}">Login</a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">{% block navbar_title_drawer %}Snapz{% endblock %}</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link mainhead" href="{{url_for('index')}}">Index</a>
+                    <a class="mdl-navigation__link mainhead" href="{{url_for('search_bar')}}">Search-bar</a>
+                    {% if session['username'] %}
+                    <a class="mdl-navigation__link mainhead" href="{{url_for('username_out',username=session['username'])}}">Profile</a>
+                    <a class="mdl-navigation__link">User:{{ session['username'] }}</a>
+                    {% else %}
+                    <a class="mdl-navigation__link mainhead" href="{{url_for('createpro')}}">Create Profile</a>
+                    <a class="mdl-navigation__link mainhead" href="{{url_for('login')}}">Login</a>
+                    {% endif %}
+                    <a class="mdl-navigation__link mainhead" href="{{ url_for('contactus') }}">Contact-us</a>
+                </nav>
+            </div>
+            {% endblock %}
+
+            <main class="mdl-layout__content">
+                <!-- MDL Progress Bar with Indeterminate Progress -->
+                <div id="content-progressbar" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+                <div class="page-content" style="padding-left: 1em;padding-right: 1em;">
+                    {% block content %}
+                    <!-- Your content goes here -->
+                    <div class="container jumbotron">
+                        <div class="jumbotron-text">
+                            <h3 class="mdl-typography--display-2">{% block jumbotron_title %}Sample-text{% endblock %}</h3>
+                            <p>{% block jumbotron_text %}jhsdhcjsd chsdjbvs csdjvbsdv
+                                sdvnsdkvns 
+                                s dsdbdshb sdsdbfhjwejhf. skdhc 18px Roboto,San Serif
+                                {% endblock %}
+                            </p>
+                        </div>
+                    </div>
+                    {% endblock %}   
+                    
+                </div>
+                {% block add_button %}
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+                    id="add-things-button" hidden>
+                    <i class="material-icons">add</i>
+                </button>
+                {% endblock %}
+                {% block footer %}
+                <footer class="mdl-mini-footer">
+                    <div class="mdl-mini-footer__left-section">
+                        <div class="mdl-logo">Snapz</div>
+                        <ul class="mdl-mini-footer__link-list">
+                            <li><a href="{{ url_for('contactus') }}">Contacts</a></li>
+                            <li><a href="https://www.privacypolicies.com/privacy/view/e263df9196fee128286f087ab60181bb">Privacy & Terms</a></li>
+                        </ul>
+                    </div>
+                </footer>
+                {% endblock %}
+            </main>
+
+        </div>
+    </body>
+    {% block scripts %}
+    {% endblock %}
+    <script type="text/javascript">
+    	document.onreadystatechange = () => {
+  if (document.readyState === 'complete') {
+    // document ready
+    var conpro=document.getElementById('content-progressbar');
+    conpro.style.display="none";
+  }
+};
+    </script>
+</html>

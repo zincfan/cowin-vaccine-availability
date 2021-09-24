@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head><title>My flask app</title></head>
+    <meta name="viewport">
+    <!--<link rel="stylesheet" type="text/css" href="css/material.min.css">-->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-teal.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='index2.css') }}">
+    <body>
+        <!-- actual code starts here. All changes should be done inside this div-->
+        <div class="demo-layout-transparent mdl-layout mdl-js-layout">
+            <header class="mdl-layout__header mdl-layout__header--transparent">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">Title</span>
+                    <!-- Add spacer, to align navigation to the right -->
+                    <div class="mdl-layout-spacer"></div>
+                    <!-- Navigation -->
+                    <nav class="mdl-navigation">
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('index')}}">Index</a>
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('createpro')}}">Create Profile</a>
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('seehim')}}">Seehim</a>
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('search_bar')}}">Search_bar</a>
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('videoupload')}}">Videoupload</a>
+                        {% if session['username'] %}
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('logout')}}">Logout</a>
+                        <img href="{{url_for('uploaded_icons', filename=get_user_photo(session['username']) ,width=40, height=30)}}"/>
+                        {% endif %}
+                        {% if not session['username'] %}
+                        <a class="mdl-navigation__link mainhead" href="{{url_for('login')}}">Login</a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">Title</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="{{url_for('index')}}">Index</a>
+                    <a class="mdl-navigation__link" href="{{url_for('createpro')}}">Create-profile</a>
+                    <a class="mdl-navigation__link" href="{{url_for('seehim')}}">seehim</a>
+                    <a class="mdl-navigation__link mainhead" href="{{url_for('videoupload')}}">Videoupload</a>
+                    {% if session['username'] %}
+                    <a class="mdl-navigation__link" href="{{url_for('logout')}}">Logout:{{ session['username'] }}</a>
+                    {% else %}
+                    <a class="mdl-navigation__link" href="{{url_for('login')}}">Login</a>
+                    {% endif %}
+                </nav>
+            </div>
+
+            <main class="mdl-layout__content">
+                <div class="container" id="credential">
+                    <div class="top-text" id="header-text">
+                        <h2>Put your documents here.</h2>
+                        <h4>Try it. Just continue your work with it.</h4>
+                    </div>
+                    <div class="top-information container-fluid" id="top-information">
+                        <div class="three-columns-top" id="c1">
+                            <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                                <div class="mdl-card__title mdl-card--expand">
+                                    <h2 class="mdl-card__title-text">updates</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    "lorewmbsdv hb wfwuhfuw fuiw ewu uwhifu ewui uwf "
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                        View Updates
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="three-columns-top" id="c2">
+                            <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                                <div class="mdl-card__title mdl-card--expand">
+                                    <h2 class="mdl-card__title-text">updates</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    "lorewmbsdv hb wfwuhfuw fuiw ewu uwhifu ewui uwf "
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                        View Updates
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="three-columns-top" id="c3">
+                            <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                                <div class="mdl-card__title mdl-card--expand">
+                                    <h2 class="mdl-card__title-text">updates</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    "lorewmbsdv hb wfwuhfuw fuiw ewu uwhifu ewui uwf "
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                        View Updates
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="mdl-mega-footer">
+                <div class="mdl-mega-footer__middle-section">
+            
+                    <div class="mdl-mega-footer__drop-down-section">
+                        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+                        <h1 class="mdl-mega-footer__heading">Features</h1>
+                        <ul class="mdl-mega-footer__link-list">
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Terms</a></li>
+                            <li><a href="#">Partners</a></li>
+                            <li><a href="#">Updates</a></li>
+                        </ul>
+                    </div>
+            
+                    <div class="mdl-mega-footer__drop-down-section">
+                        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+                        <h1 class="mdl-mega-footer__heading">Details</h1>
+                        <ul class="mdl-mega-footer__link-list">
+                            <li><a href="#">Specs</a></li>
+                            <li><a href="#">Tools</a></li>
+                            <li><a href="#">Resources</a></li>
+                        </ul>
+                    </div>
+            
+                    <div class="mdl-mega-footer__drop-down-section">
+                        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+                        <h1 class="mdl-mega-footer__heading">Technology</h1>
+                        <ul class="mdl-mega-footer__link-list">
+                            <li><a href="#">How it works</a></li>
+                            <li><a href="#">Patterns</a></li>
+                            <li><a href="#">Usage</a></li>
+                            <li><a href="#">Products</a></li>
+                            <li><a href="#">Contracts</a></li>
+                        </ul>
+                    </div>
+            
+                    <div class="mdl-mega-footer__drop-down-section">
+                        <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+                        <h1 class="mdl-mega-footer__heading">FAQ</h1>
+                        <ul class="mdl-mega-footer__link-list">
+                            <li><a href="#">Questions</a></li>
+                            <li><a href="#">Answers</a></li>
+                            <li><a href="#">Contact us</a></li>
+                        </ul>
+                    </div>
+            
+                </div>
+            
+                <div class="mdl-mega-footer__bottom-section">
+                    <div class="mdl-logo">Title</div>
+                    <ul class="mdl-mega-footer__link-list">
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">Privacy & Terms</a></li>
+                    </ul>
+                </div>
+            
+            </footer>
+        </div>
+        <!-- Number badge -->
+        <span class="mdl-badge" id="inbox" data-badge="4">Inbox</span>
+    </body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<script src="{{ url_for('static',filename='index.js') }}"

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}video-edit{% endblock %}
+{% block navbar_title %}Video-Edit{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<form action="{{ url_for('changevideo') }}" method='POST'>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <h6 name="video-id">{{ video_id }}</h6>
+    <input type="hidden" name="video_id" value="{{ video_id }}">
+    <div class="form-group">
+       <input type="text" name="title" placeholder="write title" required="required" data-role="input">
+    </div>
+    <div class="form-group">
+        <input type="text" name="description" placeholder="description" data-role="input">
+    </div>
+    <button type="submit" name="submit-form" class="button success">Submit</button>
+    <button type="reset" name="reset" class="button warning">Reset</button>
+</form>
+{%endblock%}
